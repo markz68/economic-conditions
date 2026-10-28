@@ -18,6 +18,7 @@ SPECS = [
 ('GASREGW','Regular gasoline · per gallon','Household costs','W','currency','level'),
 ('A191RL1Q225SBEA','Real GDP growth · quarterly annualized','Economy and finances','Q','percent','level'),
 ('A229RX0','Real disposable income · per person','Economy and finances','M','dollars','level'),
+('GFDEBTN','National debt · total dollars','Economy and finances','Q','debt','level'),
 ('GFDEGDQ188S','Gross federal debt / GDP','Economy and finances','Q','percent','level'),
 ('FYFSGDA188S','Federal deficit / GDP · fiscal year','Economy and finances','A','percent','negate'),
 ('APU0000708111','Grade A eggs · per dozen','Price details','M','currency','level'),

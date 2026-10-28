@@ -1,10 +1,10 @@
-# Economic Conditions · v1.1.2
+# Economic Conditions · v1.2.0
 
 An installable, read-only economic dashboard covering conditions during U.S. presidential terms. Uses public FRED CSV downloads; no API key, Python packages, account, or paid backend required. No attribution of causation and no composite partisan score.
 
 ## Features
 
-16 indicators across jobs/pay, household costs, economy/finances, and optional price/debt details. Cards have observation dates, baseline changes, five-year trend charts, and source links. Compare latest/end-of-term values or the same elapsed point in a term. Latest five terms appear by default; all historical terms remain available. Each four-year term is separate. Select the focus term and category using the controls. Settings gear contains installation help and JSON snapshot export.
+17 indicators across jobs/pay, household costs, economy/finances, and optional price/debt details. Cards have observation dates, baseline changes, five-year trend charts, and source links. Compare latest/end-of-term values or the same elapsed point in a term. Latest five terms appear by default; all historical terms remain available. Each four-year term is separate. Select the focus term and category using the controls. Settings gear contains installation help and JSON snapshot export.
 
 ## Version 1.1.0 changes
 

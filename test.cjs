@@ -33,6 +33,7 @@ assert.ok(Math.abs(u.recentChange({...m,transform:'cumulative'},term,'2025-10-15
 // Exercise rendering with the shipped snapshot across every category and mode.
 const elements={};
 for(const id of ['focus','mode','history','context','tabs','cards','comparison','status'])elements['#'+id]={value:id==='focus'?'2025-01-20':id==='mode'?'end':'all',querySelectorAll:()=>[]};
+elements['.comparison']={hidden:false};
 ctx.document={querySelector:s=>elements[s],body:{classList:{toggle:()=>{}}}};
 ctx.navigator={onLine:true};ctx.localStorage={setItem:()=>{}};
 ctx.snapshot=JSON.parse(fs.readFileSync(__dirname+'/data.json'));ctx.termData=JSON.parse(fs.readFileSync(__dirname+'/terms.json'));
@@ -68,3 +69,14 @@ console.log('PASS: verdict polarity, thresholds, missing data, recent vs inherit
  assert.equal(elements['#refresh'].disabled,false);
  console.log('PASS: update button unchanged/new data, failed/offline checks, button recovery');
 })().catch(e=>{console.error(e);process.exitCode=1;});
+
+assert.match(u.inherited({format:'debt'}, {value:39000000,base:36000000,delta:8.333}),/3.00 trillion higher/);
+assert.match(u.inherited({format:'debt'}, {value:null}),/unavailable/);
+assert.equal(u.judgment({format:'debt'},1).text,'Context needed');
+vm.runInContext("group='Markets';render();",ctx);
+assert.match(elements['#cards'].innerHTML,/Open S&amp;P 500 data/);
+assert.match(elements['#cards'].innerHTML,/Open Dow Jones data/);
+assert.equal(elements['.comparison'].hidden,true);
+vm.runInContext("group='Jobs and pay';render();",ctx);
+assert.equal(elements['.comparison'].hidden,false);
+console.log('PASS: debt unit conversion, missing debt, market references, table visibility');
