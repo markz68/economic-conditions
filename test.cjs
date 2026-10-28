@@ -1,0 +1,11 @@
+const vm=require('node:vm'),fs=require('node:fs'),assert=require('node:assert/strict');
+const ctx={console,Date};vm.createContext(ctx);vm.runInContext(fs.readFileSync(__dirname+'/app.js','utf8')+`\nthis.test={periodEnd,baselineDate,endpoint,measure,transformed,setData:x=>data=x};`,ctx);const t=ctx.test;
+assert.equal(t.periodEnd('2025-10-01','Q'),'2025-12-31');assert.equal(t.periodEnd('2024-02-01','M'),'2024-02-29');assert.equal(t.periodEnd('2024-01-01','A'),'2024-09-30');
+const term={start:'2025-01-20',end:'2029-01-20'},m={id:'CPI',frequency:'M',transform:'yoy',format:'percent'};
+t.setData({series:{CPI:{points:[['2023-12-01',100],['2024-11-01',101],['2024-12-01',102],['2025-11-01',103],['2025-12-01',104],['2026-01-01',105]]}}});
+assert.equal(t.baselineDate(term,m),'2024-12-31');assert.ok(Math.abs(t.transformed(m,['2025-12-01',104])-100*(104/102-1))<1e-9);
+let r=t.measure(m,term,'2025-12-31');assert.equal(r.date,'2025-12-01');assert.equal(r.baseline,'2024-12-01');
+r=t.measure({...m,transform:'cumulative'},term,'2025-12-31');assert.equal(r.base,0);assert.ok(Math.abs(r.value-100*(104/102-1))<1e-9);
+assert.equal(t.endpoint(term,term,'end','2030-01-01'),'2029-01-19');assert.equal(t.endpoint(term,term,'same','2026-10-28'),'2026-10-28');
+assert.equal(t.measure({...m,id:'missing'},term,'2025-12-31').value,null);assert.equal(t.transformed(m,['2023-12-01',100]),null);
+console.log('PASS: calendar periods, baselines, exact 12-month inflation, cumulative prices, term caps, missing data');

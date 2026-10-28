@@ -1,0 +1,44 @@
+name: Refresh and publish dashboard
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '23 15 * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+concurrency:
+  group: economic-pages
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python econ.py
+      - name: Preserve last successful observations
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data.json
+          git diff --cached --quiet || git commit -m 'Refresh FRED snapshot'
+          git push
+      - uses: actions/configure-pages@v5
+      - name: Stage public assets
+        run: |
+          mkdir public
+          cp index.html dashboard.html style.css app.js sw.js manifest.webmanifest data.json terms.json public/
+          cp -r icons public/
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+      - uses: actions/deploy-pages@v4
+        id: deployment
