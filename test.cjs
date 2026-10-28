@@ -9,3 +9,42 @@ r=t.measure({...m,transform:'cumulative'},term,'2025-12-31');assert.equal(r.base
 assert.equal(t.endpoint(term,term,'end','2030-01-01'),'2029-01-19');assert.equal(t.endpoint(term,term,'same','2026-10-28'),'2026-10-28');
 assert.equal(t.measure({...m,id:'missing'},term,'2025-12-31').value,null);assert.equal(t.transformed(m,['2023-12-01',100]),null);
 console.log('PASS: calendar periods, baselines, exact 12-month inflation, cumulative prices, term caps, missing data');
+vm.runInContext('this.ui={judgment,recentChange,inherited,direction,changeText};',ctx);
+const u=ctx.ui;
+assert.equal(u.judgment({id:'UNRATE',format:'percent'},.2).kind,'worse');
+assert.equal(u.judgment({id:'UNRATE',format:'percent'},-.2,true).text,'↓ Improving');
+assert.equal(u.judgment({id:'PAYEMS',format:'jobs'},1).kind,'better');
+assert.equal(u.judgment({id:'UNRATE',format:'percent'},.05).text,'→ Little changed');
+assert.equal(u.judgment({id:'PAYEMS',format:'jobs'},.3).kind,'neutral');
+for(const id of ['CPIAUCSL','A191RL1Q225SBEA'])assert.equal(u.judgment({id,format:'percent'},-1).text,'Context needed');
+assert.equal(u.judgment({id:'UNRATE'},null).text,'Comparison unavailable');
+assert.equal(u.changeText(-.001,{format:'percent'}),'0.0 pp');
+const monthly={id:'UNRATE',frequency:'M',format:'percent',transform:'level'};
+t.setData({series:{UNRATE:{points:[['2024-12-01',4],['2025-06-01',4.6],['2025-09-01',4.3],['2025-12-01',4.1]]}}});
+let trend=u.recentChange(monthly,term,'2025-10-15');
+assert.equal(trend.start,'2025-06-01');assert.equal(trend.end,'2025-09-01');
+assert.ok(trend.change<0);
+assert.equal(u.judgment(monthly,t.measure(monthly,term,'2025-10-15').delta).kind,'worse');
+assert.match(u.direction(monthly,term,'2025-10-15'),/Improving/);
+assert.equal(u.recentChange(monthly,term,'2025-01-21'),null);
+t.setData({series:{CPI:{points:[['2024-12-01',100],['2025-06-01',102],['2025-09-01',103]]}}});
+assert.match(u.inherited({...m,transform:'cumulative'},t.measure({...m,transform:'cumulative'},term,'2025-10-15')),/Prices are 3.0% higher/);
+assert.ok(Math.abs(u.recentChange({...m,transform:'cumulative'},term,'2025-10-15').change-100*(103/102-1))<1e-9);
+// Exercise rendering with the shipped snapshot across every category and mode.
+const elements={};
+for(const id of ['focus','mode','history','context','tabs','cards','comparison','status'])elements['#'+id]={value:id==='focus'?'2025-01-20':id==='mode'?'end':'all',querySelectorAll:()=>[]};
+ctx.document={querySelector:s=>elements[s],body:{classList:{toggle:()=>{}}}};
+ctx.navigator={onLine:true};ctx.localStorage={setItem:()=>{}};
+ctx.snapshot=JSON.parse(fs.readFileSync(__dirname+'/data.json'));ctx.termData=JSON.parse(fs.readFileSync(__dirname+'/terms.json'));
+vm.runInContext('data=snapshot;terms=termData;',ctx);
+for(const g of [...new Set(ctx.snapshot.metrics.map(m=>m.group))]){
+ ctx.category=g;
+ for(const mode of ['end','same']){
+  elements['#mode'].value=mode;
+  vm.runInContext('group=category;render();',ctx);
+  assert.ok(elements['#cards'].innerHTML.includes('Recent direction:'));
+  assert.ok(!/NaN|undefined/.test(elements['#cards'].innerHTML));
+  assert.ok(elements['#comparison'].innerHTML.includes('inherited')||g==='Household costs');
+ }
+}
+console.log('PASS: verdict polarity, thresholds, missing data, recent vs inherited disagreement, cumulative prices, render all categories/modes');

@@ -1,10 +1,14 @@
-# Economic Conditions · v1.0.0
+# Economic Conditions · v1.1.0
 
 An installable, read-only economic dashboard covering conditions during U.S. presidential terms. Uses public FRED CSV downloads; no API key, Python packages, account, or paid backend required. No attribution of causation and no composite partisan score.
 
 ## Features
 
 16 indicators across jobs/pay, household costs, economy/finances, and optional price/debt details. Cards have observation dates, baseline changes, five-year trend charts, and source links. Compare latest/end-of-term values or the same elapsed point in a term. Latest five terms appear by default; all historical terms remain available. Each four-year term is separate. Select the focus term and category using the controls. Settings gear contains installation help and JSON snapshot export.
+
+## Version 1.1.0 changes
+
+Cards and historical table now show Better / Worse / Little changed / Context needed, with words and numerical arrows as well as green/red/neutral colors. Cards separate inherited-level comparisons from recent direction. Recent direction compares the latest observation with 3 months earlier (monthly), 13 weeks earlier (weekly), the previous quarter, or previous fiscal year; both dates are displayed and the window can cross inauguration. Little changed is less than 0.1 percentage point for rates or 0.5% for levels; this is a display threshold, not a significance test. Missing comparisons remain unavailable. Use Same point in each term to compare equal durations.
 
 ## Run locally on Windows
 
@@ -34,7 +38,7 @@ Visit the HTTPS URL online first. In Chrome/Edge use the Install app option; in 
 - Monthly baselines use December before inauguration; quarterly baselines use Q4; weekly baselines use the last observation before inauguration; annual fiscal baselines use the last fiscal year ending before inauguration.
 - Monthly and quarterly points are included only after their full period ends. Source timestamps for quarterly data indicate quarter start; annual fiscal timestamps indicate year label, interpreted as September 30. Endpoints stop before the next inauguration and never extend beyond today's UTC date. This is an economic-period convention, not “information known on inauguration day.”
 - Same-point comparisons use elapsed calendar days from the selected term's start, capped at its duration. Different frequencies still yield different final observation dates. Cards and table show actual dates and baseline periods.
-- Inflation compares exact matching months twelve months apart. Cumulative CPI price change is measured against each term baseline. Lower inflation does not mean falling prices. Rates show changes in percentage points; level measures show percentage changes. No universal better/worse color scoring.
+- Inflation compares exact matching months twelve months apart. Cumulative CPI price change is measured against each term baseline. Lower inflation does not mean falling prices. Rates show changes in percentage points; level measures show percentage changes. Badges show generally favorable changes vs each term’s inherited baseline: higher employment, jobs, real earnings and income; lower unemployment, grocery/shelter inflation, borrowing costs, individual prices, debt burdens and fiscal ratios. Overall inflation and GDP growth say Context needed. Cumulative prices use higher/lower wording. These are not causal claims or an overall score. Fiscal badges include context cautions.
 - GDP growth is quarterly annualized, not cumulative growth. Payroll levels are thousands in the source and converted to jobs for display. Real weekly earnings are source constant dollars; real disposable income is source chained dollars at an annual rate per person. Dollar bases can change with source revisions; inspect the linked FRED metadata when comparing to other reports.
 - Gross federal debt/GDP is not debt held by the public. Fiscal deficit/GDP reverses FRED's surplus-positive convention so deficits are positive; surpluses negative. Fiscal years straddle presidential terms. Annual fiscal observations are supplementary context, not a precise administration scorecard.
 - Charts show up to five years ending at the comparison cutoff, which can include the previous term. A snapshot older than three days is flagged; this is retrieval age, not a claim that monthly/quarterly observations are overdue.
@@ -44,7 +48,7 @@ Series IDs and categories are in `econ.py` (SPECS). Series pages link to origina
 
 ## Future administrations
 
-Edit `terms.json` to add the confirmed administration's name and dates, keeping chronological order. The app chooses eligible terms by date, defaults to the latest five, and keeps all history. After the configured final term ends it displays a configuration warning; future winners are never guessed. History is not deleted. To revise term dates for an unexpected succession, update configuration carefully and test baselines. Combined eight-year presidency comparisons and arbitrary custom comparison sets are not included in v1.0.0.
+Edit `terms.json` to add the confirmed administration's name and dates, keeping chronological order. The app chooses eligible terms by date, defaults to the latest five, and keeps all history. After the configured final term ends it displays a configuration warning; future winners are never guessed. History is not deleted. To revise term dates for an unexpected succession, update configuration carefully and test baselines. Combined eight-year presidency comparisons and arbitrary custom comparison sets are not included in v1.1.0.
 
 ## Privacy, settings, export
 
