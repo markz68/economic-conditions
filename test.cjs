@@ -48,3 +48,23 @@ for(const g of [...new Set(ctx.snapshot.metrics.map(m=>m.group))]){
  }
 }
 console.log('PASS: verdict polarity, thresholds, missing data, recent vs inherited disagreement, cumulative prices, render all categories/modes');
+(async()=>{
+ elements['#refresh']={disabled:false,textContent:'Check for updates',setAttribute(){},removeAttribute(){}};
+ elements['#update-result']={textContent:''};
+ vm.runInContext('this.realLoad=load;load=async()=>{};',ctx);
+ await vm.runInContext('checkUpdates()',ctx);
+ assert.match(elements['#update-result'].textContent,/Already up to date/);
+ assert.equal(elements['#refresh'].disabled,false);
+ vm.runInContext('load=async()=>{data={...data,attempted:"new snapshot"};};',ctx);
+ await vm.runInContext('checkUpdates()',ctx);
+ assert.match(elements['#update-result'].textContent,/Updated to the latest/);
+ vm.runInContext('load=async()=>{throw Error("network failure")};',ctx);
+ await vm.runInContext('checkUpdates()',ctx);
+ assert.match(elements['#update-result'].textContent,/Could not check/);
+ ctx.navigator.onLine=false;
+ await vm.runInContext('checkUpdates()',ctx);
+ assert.match(elements['#update-result'].textContent,/offline/);
+ assert.equal(elements['#refresh'].textContent,'Check for updates');
+ assert.equal(elements['#refresh'].disabled,false);
+ console.log('PASS: update button unchanged/new data, failed/offline checks, button recovery');
+})().catch(e=>{console.error(e);process.exitCode=1;});

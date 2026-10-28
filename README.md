@@ -1,4 +1,4 @@
-# Economic Conditions · v1.1.1
+# Economic Conditions · v1.1.2
 
 An installable, read-only economic dashboard covering conditions during U.S. presidential terms. Uses public FRED CSV downloads; no API key, Python packages, account, or paid backend required. No attribution of causation and no composite partisan score.
 
