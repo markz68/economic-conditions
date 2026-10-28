@@ -18,7 +18,7 @@ On any Python-supported computer: `python econ.py`, then `python -m http.server 
 2. Commit the **contents** of this folder at the repository root, including `.github/workflows/publish.yml` (hidden folders can be missed by manual upload). A git push is the most reliable way to include everything.
 3. Repository Settings → Pages → Build and deployment → Source: GitHub Actions.
 4. Actions → Refresh and publish dashboard → Run workflow. Allow the workflow to write repository contents if organization/repository policy requires it.
-5. Open the URL reported by the successful deployment. No live URL has been verified for this package.
+5. Open the URL reported by the successful deployment. Live URL: https://markz68.github.io/economic-conditions/ (deployment and public assets verified October 28, 2026).
 
 The workflow runs on main-branch pushes, manual dispatch, and daily at 15:23 UTC (11:23 AM Eastern daylight time / 10:23 AM Eastern standard time). Scheduled runs can be delayed; GitHub can disable schedules in inactive public repositories. The page explicitly displays the snapshot attempt and per-series retrieval dates. Check GitHub's current Actions/Pages usage limits for your account.
 
@@ -54,4 +54,4 @@ No analytics or account. Only history mode, comparison mode, and selected focus 
 
 Run `node test.cjs` for date/transform regression checks; `node --check app.js` and `node --check sw.js` for syntax. If data fails to load, use localhost or HTTPS, connect to the internet, and retry. For failed scheduled updates inspect Actions logs and the per-series warning. On Windows a Python-not-found error means Python is absent or not on PATH. Avoid running another server on port 8000.
 
-This release has fetched all 15 distinct source series successfully and passed calculation and syntax checks. Automated visual/offline browser tests could not run because the test browser download failed in the build environment. Mobile appearance and offline behavior remain unverified. Hosting deployment, real-device installation, and installed-app upgrade behavior require verification after publication.
+This release has fetched all 15 distinct source series successfully and passed calculation and syntax checks. Automated visual/offline browser tests could not run because the test browser download failed in the build environment. Mobile appearance and offline behavior remain unverified. GitHub Pages deployment and HTTP availability of the dashboard, scripts, manifest, data, terms, and icons were verified October 28, 2026. All 15 series refreshed successfully on GitHub. Real-device installation and installed-app upgrade behavior remain unverified.
