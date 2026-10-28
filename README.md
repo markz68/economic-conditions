@@ -1,4 +1,4 @@
-# Economic Conditions · v1.1.0
+# Economic Conditions · v1.1.1
 
 An installable, read-only economic dashboard covering conditions during U.S. presidential terms. Uses public FRED CSV downloads; no API key, Python packages, account, or paid backend required. No attribution of causation and no composite partisan score.
 
@@ -48,7 +48,7 @@ Series IDs and categories are in `econ.py` (SPECS). Series pages link to origina
 
 ## Future administrations
 
-Edit `terms.json` to add the confirmed administration's name and dates, keeping chronological order. The app chooses eligible terms by date, defaults to the latest five, and keeps all history. After the configured final term ends it displays a configuration warning; future winners are never guessed. History is not deleted. To revise term dates for an unexpected succession, update configuration carefully and test baselines. Combined eight-year presidency comparisons and arbitrary custom comparison sets are not included in v1.1.0.
+Edit `terms.json` to add the confirmed administration's name and dates, keeping chronological order. The app chooses eligible terms by date, defaults to the latest five, and keeps all history. After the configured final term ends it displays a configuration warning; future winners are never guessed. History is not deleted. To revise term dates for an unexpected succession, update configuration carefully and test baselines. Combined eight-year presidency comparisons and arbitrary custom comparison sets are not included in v1.1.1.
 
 ## Privacy, settings, export
 
